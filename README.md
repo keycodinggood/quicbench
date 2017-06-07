@@ -31,6 +31,12 @@ Notes
 
     ```$>go build gobench.go```
     
+    Then you can run the command:
+    
+    ```bash
+    $>./quicbench -u https://localhost:6121/ -k=true -c 50 -r=10 -t 10
+    ```
+    
 2. Because it's a test tool, in HTTPS the ceritificate verification is insecure
 3. use Go >= 1.7 (quci-go support Go 1.7+)
 4. quicbench creates one QUIC connection for each client and just create new stream for every request.
