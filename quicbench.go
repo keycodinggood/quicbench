@@ -17,7 +17,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/devsisters/goquic"
+	"github.com/lucas-clemente/quic-go/h2quic"
+	"github.com/lucas-clemente/quic-go/utils"
 )
 
 var (
@@ -247,9 +248,8 @@ func TimeoutDialer(result *Result, connectTimeout, readTimeout, writeTimeout tim
 }
 
 func MyClient(result *Result, connectTimeout, readTimeout, writeTimeout time.Duration) *http.Client {
-
 	return &http.Client{
-		Transport: goquic.NewRoundTripper(keepQuicConn),
+		Transport: &h2quic.QuicRoundTripper{},
 	}
 }
 
@@ -320,7 +320,7 @@ func main() {
 	flag.Parse()
 
 	if turnonLog {
-		goquic.SetLogLevel(-1)
+		utils.SetLogLevel(utils.LogLevelDebug)
 	}
 
 	configuration := NewConfiguration()
