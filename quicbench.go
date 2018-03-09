@@ -18,7 +18,6 @@ import (
 	"time"
 
 	"github.com/lucas-clemente/quic-go/h2quic"
-	"github.com/lucas-clemente/quic-go/utils"
 )
 
 var (
@@ -29,7 +28,6 @@ var (
 	urlsFilePath     string
 	keepAlive        bool
 	keepQuicConn     bool
-	turnonLog        bool
 	postDataFilePath string
 	connectTimeout   int
 	writeTimeout     int
@@ -95,7 +93,6 @@ func init() {
 	flag.IntVar(&connectTimeout, "tc", 5000, "Connect timeout (in milliseconds)")
 	flag.IntVar(&writeTimeout, "tw", 5000, "Write timeout (in milliseconds)")
 	flag.IntVar(&readTimeout, "tr", 5000, "Read timeout (in milliseconds)")
-	flag.BoolVar(&turnonLog, "log", false, "Turnon QUIC log")
 }
 
 func printResults(results map[int]*Result, startTime time.Time) {
@@ -158,7 +155,6 @@ func readLines(path string) (lines []string, err error) {
 }
 
 func NewConfiguration() *Configuration {
-
 	if urlsFilePath == "" && url == "" {
 		flag.Usage()
 		os.Exit(1)
@@ -249,7 +245,7 @@ func TimeoutDialer(result *Result, connectTimeout, readTimeout, writeTimeout tim
 
 func MyClient(result *Result, connectTimeout, readTimeout, writeTimeout time.Duration) *http.Client {
 	return &http.Client{
-		Transport: &h2quic.QuicRoundTripper{},
+		Transport: &h2quic.RoundTripper{},
 	}
 }
 
@@ -305,6 +301,8 @@ func client(configuration *Configuration, result *Result, done *sync.WaitGroup) 
 }
 
 func main() {
+	flag.Parse()
+
 	startTime := time.Now()
 	var done sync.WaitGroup
 	results := make(map[int]*Result)
@@ -316,12 +314,6 @@ func main() {
 		printResults(results, startTime)
 		os.Exit(0)
 	}()
-
-	flag.Parse()
-
-	if turnonLog {
-		utils.SetLogLevel(utils.LogLevelDebug)
-	}
 
 	configuration := NewConfiguration()
 

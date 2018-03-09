@@ -41,6 +41,7 @@ Notes
 3. use Go >= 1.7 (quci-go support Go 1.7+)
 4. quicbench creates one QUIC connection for each client and just create new stream for every request.
    If you want to create QUIC connection for every request, use -qk=false option.
+5. Test with Caddy's Quic Support, with version Q035, Q036, Q037
 
 Help
 ================
